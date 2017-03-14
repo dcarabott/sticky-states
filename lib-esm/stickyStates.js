@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-import { PathFactory, UIRouterPluginBase, TransitionHookPhase, TransitionHookScope, find, tail, isString, isArray, inArray, removeFrom, pushTo, identity, anyTrueR, assertMap, uniqR, defaultTransOpts } from "sn-ui-router-core";
+import { PathFactory, UIRouterPluginBase, TransitionHookPhase, TransitionHookScope, find, tail, isString, isArray, inArray, removeFrom, pushTo, identity, anyTrueR, assertMap, uniqR, defaultTransOpts } from "ui-router-core";
 var notInArray = function (arr) { return function (item) { return !inArray(arr, item); }; };
 var isChildOf = function (parent) {
     return function (node) {
@@ -83,8 +83,8 @@ var StickyStatesPlugin = (function (_super) {
     };
     StickyStatesPlugin.prototype._defineStickyEvents = function () {
         var paths = this.pluginAPI._getPathTypes();
-        this.pluginAPI._defineEvent("onInactivate", TransitionHookPhase.RUN, 5, paths.inactivating, true);
-        this.pluginAPI._defineEvent("onReactivate", TransitionHookPhase.RUN, 35, paths.reactivating);
+        this.pluginAPI._defineEvent("onInactivate", TransitionHookPhase.ASYNC, 5, paths.inactivating, true);
+        this.pluginAPI._defineEvent("onReactivate", TransitionHookPhase.ASYNC, 35, paths.reactivating);
     };
     // Process state.onInactivate or state.onReactivate callbacks
     StickyStatesPlugin.prototype._addStateCallbacks = function () {
