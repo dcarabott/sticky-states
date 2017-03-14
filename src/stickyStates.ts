@@ -1,11 +1,11 @@
 import {
-  UIRouter, PathFactory, StateOrName, StateObject, StateDeclaration, PathNode, TreeChanges, Transition, UIRouterPluginBase,
+  UIRouter, PathFactory, StateOrName, State, StateDeclaration, PathNode, TreeChanges, Transition, UIRouterPluginBase,
   TransitionHookPhase, TransitionHookScope, TransitionServicePluginAPI, HookMatchCriteria, TransitionStateHookFn,
   HookRegOptions, PathType, find, tail, isString, isArray, inArray, removeFrom, pushTo, identity, anyTrueR, assertMap,
   uniqR, defaultTransOpts, HookMatchCriterion
-} from "sn-ui-router-core";
+} from "ui-router-core";
 
-declare module "sn-ui-router-core/lib/state/interface" {
+declare module "ui-router-core/lib/state/interface" {
   interface StateDeclaration {
     sticky?: boolean;
     onInactivate?: TransitionStateHookFn;
@@ -13,22 +13,22 @@ declare module "sn-ui-router-core/lib/state/interface" {
   }
 }
 
-declare module "sn-ui-router-core/lib/state/stateObject" {
-  interface StateObject {
+declare module "ui-router-core/lib/state/stateObject" {
+  interface State {
     sticky?: boolean;
     onInactivate?: TransitionStateHookFn;
     onReactivate?: TransitionStateHookFn;
   }
 }
 
-declare module "sn-ui-router-core/lib/transition/transitionService" {
+declare module "ui-router-core/lib/transition/transitionService" {
   interface TransitionService {
     onInactivate: (criteria: HookMatchCriteria, callback: TransitionStateHookFn, options?: HookRegOptions) => Function;
     onReactivate: (criteria: HookMatchCriteria, callback: TransitionStateHookFn, options?: HookRegOptions) => Function;
   }
 }
 
-declare module "sn-ui-router-core/lib/transition/interface" {
+declare module "ui-router-core/lib/transition/interface" {
   interface TransitionOptions {
     exitSticky: StateOrName[]|StateOrName;
   }
@@ -67,7 +67,7 @@ const isChildOfAny = (_parents: PathNode[]) => {
       _parents.map(parent => isChildOf(parent)(node)).reduce(anyTrueR, false);
 };
 
-const ancestorPath = (state: StateObject) =>
+const ancestorPath = (state: State) =>
     state.parent ? ancestorPath(state.parent).concat(state) : [state];
 
 const isDescendantOf = (_ancestor: PathNode) => {
@@ -81,7 +81,7 @@ const isDescendantOfAny = (ancestors: PathNode[]) =>
         ancestors.map(ancestor => isDescendantOf(ancestor)(node))
             .reduce(anyTrueR, false);
 
-function findStickyAncestor(state: StateObject) {
+function findStickyAncestor(state: State) {
   return state.sticky ? state : findStickyAncestor(state.parent);
 }
 
@@ -133,18 +133,18 @@ export class StickyStatesPlugin extends UIRouterPluginBase {
 
   private _defineStickyEvents() {
     let paths = this.pluginAPI._getPathTypes();
-    this.pluginAPI._defineEvent("onInactivate", TransitionHookPhase.RUN, 5, paths.inactivating, true);
-    this.pluginAPI._defineEvent("onReactivate", TransitionHookPhase.RUN, 35, paths.reactivating);
+    this.pluginAPI._defineEvent("onInactivate", TransitionHookPhase.ASYNC, 5, paths.inactivating, true);
+    this.pluginAPI._defineEvent("onReactivate", TransitionHookPhase.ASYNC, 35, paths.reactivating);
   }
 
   // Process state.onInactivate or state.onReactivate callbacks
   private _addStateCallbacks() {
     let inactivateCriteria = { inactivating: state => !!state.onInactivate };
-    this.router.transitionService.onInactivate(inactivateCriteria, (trans: Transition, state: StateDeclaration) =>
+    this.router.transitionService.onInactivate(inactivateCriteria, (trans: Transition, state: State) =>
         state.onInactivate(trans, state));
 
     let reactivateCriteria = { reactivating: state => !!state.onReactivate };
-    this.router.transitionService.onReactivate(reactivateCriteria, (trans: Transition, state: StateDeclaration) =>
+    this.router.transitionService.onReactivate(reactivateCriteria, (trans: Transition, state: State) =>
         state.onReactivate(trans, state));
   }
 
@@ -156,7 +156,7 @@ export class StickyStatesPlugin extends UIRouterPluginBase {
 
     let $state = trans.router.stateService;
 
-    let states: StateObject[] = (exitSticky as any[])
+    let states: State[] = (exitSticky as any[])
         .map(assertMap((stateOrName) => $state.get(stateOrName), (state) => "State not found: " + state))
         .map(state => state.$$state());
 
