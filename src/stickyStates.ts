@@ -3,9 +3,9 @@ import {
   TransitionHookPhase, TransitionHookScope, TransitionServicePluginAPI, HookMatchCriteria, TransitionStateHookFn,
   HookRegOptions, PathType, find, tail, isString, isArray, inArray, removeFrom, pushTo, identity, anyTrueR, assertMap,
   uniqR, defaultTransOpts, HookMatchCriterion
-} from "ui-router-core";
+} from "sn-ui-router-core";
 
-declare module "ui-router-core/lib/state/interface" {
+declare module "sn-ui-router-core/lib/state/interface" {
   interface StateDeclaration {
     sticky?: boolean;
     onInactivate?: TransitionStateHookFn;
@@ -13,7 +13,7 @@ declare module "ui-router-core/lib/state/interface" {
   }
 }
 
-declare module "ui-router-core/lib/state/stateObject" {
+declare module "sn-ui-router-core/lib/state/stateObject" {
   interface StateObject {
     sticky?: boolean;
     onInactivate?: TransitionStateHookFn;
@@ -21,14 +21,14 @@ declare module "ui-router-core/lib/state/stateObject" {
   }
 }
 
-declare module "ui-router-core/lib/transition/transitionService" {
+declare module "sn-ui-router-core/lib/transition/transitionService" {
   interface TransitionService {
     onInactivate: (criteria: HookMatchCriteria, callback: TransitionStateHookFn, options?: HookRegOptions) => Function;
     onReactivate: (criteria: HookMatchCriteria, callback: TransitionStateHookFn, options?: HookRegOptions) => Function;
   }
 }
 
-declare module "ui-router-core/lib/transition/interface" {
+declare module "sn-ui-router-core/lib/transition/interface" {
   interface TransitionOptions {
     exitSticky: StateOrName[]|StateOrName;
   }
