@@ -1,7 +1,7 @@
 {
   "name": "sn-ui-router-sticky-states",
   "description": "UI-Router Sticky States: Keep states and their components alive while a different state is activated",
-  "version": "1.3.0",
+  "version": "1.3.2",
   "scripts": {
     "clean": "shx rm -rf lib lib-esm",
     "build": "npm run clean && tsc && tsc -m es6 -outDir lib-esm",
@@ -39,9 +39,12 @@
   "module": "lib-esm/index.js",
   "typings": "lib/index.d.ts",
   "license": "MIT",
-  "peerDependencies": {
+  "dependencies": {
     "ui-router-core": ">=3.0.0 <5.0.0"
   },
+//  "peerDependencies": {
+  //    "ui-router-core": ">=3.0.0 <5.0.0"
+  //  },
   "devDependencies": {
     "@types/angular": "^1.5.20",
     "@types/angular-mocks": "^1.5.6",
