@@ -2,10 +2,10 @@ import { getTestGoFn, addCallbacks, resetTransitionLog, pathFrom, equalityTester
 import {
   UIRouter, StateService, StateRegistry, StateDeclaration, ViewService, TransitionService, PathNode, _ViewDeclaration,
   isObject, ViewConfigFactory, ViewConfig
-} from "ui-router-core";
+} from "sn-ui-router-core";
 import "../src/stickyStates";
 import { StickyStatesPlugin } from "../src/stickyStates";
-import { memoryLocationPlugin, servicesPlugin } from 'ui-router-core/lib/vanilla';
+import { memoryLocationPlugin, servicesPlugin } from 'sn-ui-router-core/lib/vanilla';
 
 let router: UIRouter;
 let $state: StateService;
@@ -67,7 +67,7 @@ describe('stickyState', function () {
   }
 
   // Set up base state heirarchy
-  function getSimpleStates(): StateDeclaration[] {
+  function getSimpleStates(): any[] {
     return [
       { name: 'main', },
       { name: 'A' },
@@ -535,7 +535,7 @@ describe('stickyState', function () {
   });
 
   describe('ui-router option reload: [state ref]', function() {
-    let bStates: StateDeclaration[] = [
+    let bStates: any[] = [
       { name: 'B', sticky: true },
       { name: 'B._1', sticky: true },
       { name: 'B._1.__1', sticky: true }
