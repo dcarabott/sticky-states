@@ -1,10 +1,11 @@
 {
   "name": "sn-ui-router-sticky-states",
   "description": "UI-Router Sticky States: Keep states and their components alive while a different state is activated",
-  "version": "6.0.1",
+  "version": "6.0.5",
   "scripts": {
     "clean": "shx rm -rf lib lib-esm",
-    "build": "npm run clean && tsc && tsc -m es6 -outDir lib-esm",
+    "build": "npm run clean && tsc && tsc -m es6 -outDir lib-esm && npm run fixdts",
+    "fixdts": "dts-downlevel 'lib/**/*.d.ts' 'lib-esm/**/*.d.ts'",
     "test": "karma start",
     "watch": "run-p watch:*",
     "watch:buildjs": "tsc -w",
@@ -55,6 +56,7 @@
     "conventional-changelog-cli": "^1.1.1",
     "conventional-changelog-ui-router-core": "^1.3.0",
     "core-js": "^2.4.1",
+    "dts-downlevel": "^0.2.1",
     "jasmine-core": "^2.4.1",
     "karma": "^1.2.0",
     "karma-chrome-launcher": "~0.1.0",

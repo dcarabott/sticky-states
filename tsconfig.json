@@ -3,10 +3,11 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
-    "module": "umd",
+    "module": "commonjs",
     "target": "es5",
     "lib": [ "es6", "dom" ],
     "allowSyntheticDefaultImports": true,
+    "rootDir": "src",
     "outDir": "lib",
     "declaration": true,
     "sourceMap": true
