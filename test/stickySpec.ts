@@ -2,10 +2,10 @@ import { getTestGoFn, addCallbacks, resetTransitionLog, pathFrom, equalityTester
 import {
   UIRouter, StateService, StateRegistry, StateDeclaration, ViewService, TransitionService, PathNode, _ViewDeclaration,
   isObject, ViewConfigFactory, ViewConfig
-} from "sn-ui-router-core";
+} from "@uirouter/core";
 import "../src/stickyStates";
 import { StickyStatesPlugin } from "../src/stickyStates";
-import { memoryLocationPlugin, servicesPlugin } from 'sn-ui-router-core/lib/vanilla';
+import { memoryLocationPlugin, servicesPlugin } from '@uirouter/core/lib/vanilla';
 
 let router: UIRouter;
 let $state: StateService;
@@ -67,7 +67,7 @@ describe('stickyState', function () {
   }
 
   // Set up base state heirarchy
-  function getSimpleStates(): any[] {
+  function getSimpleStates(): StateDeclaration[] {
     return [
       { name: 'main', },
       { name: 'A' },
@@ -535,7 +535,7 @@ describe('stickyState', function () {
   });
 
   describe('ui-router option reload: [state ref]', function() {
-    let bStates: any[] = [
+    let bStates: StateDeclaration[] = [
       { name: 'B', sticky: true },
       { name: 'B._1', sticky: true },
       { name: 'B._1.__1', sticky: true }
@@ -640,46 +640,46 @@ describe('stickyState', function () {
   describe("$state.go `exitSticky` option", function() {
     beforeEach(async function(done) {
       ssReset(getSimpleStates());
-      // await testGo('A._1');
-      // await testGo('A._2');
+      await testGo('A._1');
+      await testGo('A._2');
 
       done();
     });
 
-    // it("should exit an inactive state via `exitSticky` option", async (done) => {
-    //   await $state.go($state.current, {}, { exitSticky: 'A._1' });
-    //   expect($stickyState.inactives().length).toBe(0);
-    //
-    //   done();
-    // });
+    it("should exit an inactive state via `exitSticky` option", async (done) => {
+      await $state.go($state.current, {}, { exitSticky: 'A._1' });
+      expect($stickyState.inactives().length).toBe(0);
+
+      done();
+    });
 
     it("should exit the currently active sticky via `exitSticky` option after transitioning elsewhere", async (done) => {
       await $state.go("A._1");
-      expect($stickyState.inactives().length).toBe(0);
+      expect($stickyState.inactives().length).toBe(1);
 
-      await $state.go("A._2.__1", {}, { exitSticky: 'A._1' });
+      await $state.go("A._2", {}, { exitSticky: 'A._1' });
       expect($stickyState.inactives().length).toBe(0);
 
       done();
     });
 
-    // it("should reset an inactive state via `exitSticky` option, while activating a different state", async (done) => {
-    //   await $state.go("A._3", {}, { exitSticky: 'A._1' });
-    //   expect($stickyState.inactives().length).toBe(1);
-    //   expect($stickyState.inactives()[0].name).toBe('A._2');
-    //
-    //   done();
-    // });
-    //
-    // it("should throw if the `exitSticky` option is part of the to path", () => {
-    //   let caught = null;
-    //   try {
-    //     $state.go("A._1", {}, { exitSticky: 'A._1' });
-    //   } catch (error) { caught = error; }
-    //   expect(caught).toEqual(Error("Can not exit a sticky state that is currently active/activating: A._1"));
-    //   expect($stickyState.inactives().length).toBe(1);
-    //   expect($stickyState.inactives()[0].name).toBe('A._1');
-    // });
+    it("should reset an inactive state via `exitSticky` option, while activating a different state", async (done) => {
+      await $state.go("A._3", {}, { exitSticky: 'A._1' });
+      expect($stickyState.inactives().length).toBe(1);
+      expect($stickyState.inactives()[0].name).toBe('A._2');
+
+      done();
+    });
+
+    it("should throw if the `exitSticky` option is part of the to path", () => {
+      let caught = null;
+      try {
+        $state.go("A._1", {}, { exitSticky: 'A._1' });
+      } catch (error) { caught = error; }
+      expect(caught).toEqual(Error("Can not exit a sticky state that is currently active/activating: A._1"));
+      expect($stickyState.inactives().length).toBe(1);
+      expect($stickyState.inactives()[0].name).toBe('A._1');
+    });
   });
 
   describe('TransitionService', () => {
